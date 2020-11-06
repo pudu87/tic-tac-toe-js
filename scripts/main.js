@@ -1,3 +1,5 @@
+const players = [];
+
 // PLAYER FACTORY
 
 const createPlayer = (name, mark) => {
@@ -32,14 +34,30 @@ const gameBoard = (function() {
 
 const displayController = (function() {
 
+  const playerForm = document.querySelector('form');
+  const playerInfo = document.querySelector('.player-info');
+  const playerName = document.querySelectorAll('.player-name');
+
+  const insertPlayers = () => {
+    playerForm.hidden = true;
+    playerInfo.hidden = false;
+    playerName[0].textContent = players[0].name;
+    playerName[1].textContent = players[1].name;
+  }
   const addToBoard = (index, mark) => {
     let square = document.querySelector('#_' + index)
     square.textContent = mark;
   }
-  const won = () => console.log('you won');
-  const draw = () => console.log('you draw');
+  const won = (player) => {
+    // elaborate
+    console.log('you won');
+  }
+  const draw = () => {
+    // elaborate
+    console.log('you draw');
+  }
 
-  return { won, draw, addToBoard }
+  return { insertPlayers, addToBoard, won, draw }
 })();
 
 // GAME CONTROLLER MODULE
@@ -48,9 +66,13 @@ const gameController = (function() {
 
   let round = 0;
 
-  const players = [];
-  players.push(createPlayer('pikachu', 'x'));
-  players.push(createPlayer('snorlax', 'o'));
+  const insertPlayers = () => {
+    let input = Array.from(document.querySelectorAll('form input'));
+    players.push(createPlayer(input[0].value, 'x'));
+    players.push(createPlayer(input[1].value, 'o'));
+    displayController.insertPlayers();
+    return false;
+  }
 
   const currentPlayer = () => round % 2 == 0 ? players[0] : players[1];
   const changePlayer = () => round ++;
@@ -59,7 +81,7 @@ const gameController = (function() {
       gameBoard.addToBoard(index, mark);
       displayController.addToBoard(index, mark);
       if (gameBoard.checkIfVictory(mark)) {
-        displayController.won();
+        displayController.won(currentPlayer());
       }
       else if (round == 8) {
         displayController.draw();
@@ -78,5 +100,5 @@ const gameController = (function() {
     });
   })
 
-  return { currentPlayer, changePlayer }
+  return { insertPlayers, currentPlayer, changePlayer }
 })();

@@ -11,7 +11,42 @@
 
   <body>
     <div class="container">
-      <div id="board">
+      <header>
+        <h1>TIC TAC TOE</h1>
+
+        <div>
+          <form onsubmit="return gameController.insertPlayers()">
+            <div class="player">
+              <label for="player1">Player 1:</label>
+              <input type="text" id="player1" name="player1">
+            </div>
+
+            <div class="player">
+              <label for="player1">Player 2:</label>
+              <input type="text" id="player2" name="player2">
+            </div>
+
+            <input type="submit" id="confirm" value="Confirm">
+          </form>
+
+          <div class="player-info" hidden>
+            <div class="player">
+              <p>Player 1:</p>
+              <p class="player-name"></p>
+            </div>
+            <div class="player">
+              <p>Player 2:</p>
+              <p class="player-name"></p>
+            </div>
+          </div>
+        </div>
+        
+        <button class="reset">Reset</button>
+
+        <div class="info">Insert Player names!</div>
+      </header>
+
+      <section id="board">
         <div class="square" id="_0"></div>
         <div class="square" id="_1"></div>
         <div class="square" id="_2"></div>
@@ -21,8 +56,9 @@
         <div class="square" id="_6"></div>
         <div class="square" id="_7"></div>
         <div class="square" id="_8"></div>
-      </div>
+      </section>
     </div>
+
     <script src="scripts/main.js"></script>
   </body>
 </html>
