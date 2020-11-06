@@ -32,10 +32,14 @@ const gameBoard = (function() {
 
 const displayController = (function() {
 
+  const addToBoard = (index, mark) => {
+    let square = document.querySelector('#_' + index)
+    square.textContent = mark;
+  }
   const won = () => console.log('you won');
   const draw = () => console.log('you draw');
 
-  return { won, draw }
+  return { won, draw, addToBoard }
 })();
 
 // GAME CONTROLLER MODULE
@@ -53,6 +57,7 @@ const gameController = (function() {
   const gameFlow = (index, mark) => {
     if (!gameBoard.checkIfMark(index)) {
       gameBoard.addToBoard(index, mark);
+      displayController.addToBoard(index, mark);
       if (gameBoard.checkIfVictory(mark)) {
         displayController.won();
       }
@@ -67,6 +72,8 @@ const gameController = (function() {
   squares.forEach( square => {
     square.addEventListener('click', (e) => {
       let index = e.target.id.split('')[1];
+      console.log(`EVENTLISTENER-index: ${index}`);
+      console.log(`EVENTLISTENER-player: ${currentPlayer().mark}`)
       gameFlow(index, currentPlayer().mark);
     });
   })
