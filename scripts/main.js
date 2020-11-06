@@ -35,6 +35,7 @@ const gameBoard = (function() {
 
 const displayController = (function() {
 
+  const info = document.querySelector('.info');
   const playerForm = document.querySelector('form');
   const playerInfo = document.querySelector('.player-info');
   const playerName = document.querySelectorAll('.player-name');
@@ -57,16 +58,19 @@ const displayController = (function() {
     squares.forEach(square => square.textContent = '');
     inputs.forEach(input => input.value = '');
   }
-  const won = (player) => {
-    // elaborate
-    console.log('you won');
+  const showTurn = (player) => {
+    player = player == players[0] ? players [1] : players[0];
+    info.textContent = `${player.name}, It's your turn. 
+    Click a square to put an ${player.mark}.`;
   }
-  const draw = () => {
-    // elaborate
-    console.log('you draw');
+  const showWon = (player) => {
+    info.textContent = `Congratulaions ${player.name}, you won!`;
+  }
+  const showDraw = () => {
+    info.textContent = 'Nobody won. Try again';
   }
 
-  return { insertPlayers, addToBoard, resetDisplay, won, draw }
+  return { insertPlayers, addToBoard, resetDisplay, showTurn, showWon, showDraw }
 })();
 
 // GAME CONTROLLER MODULE
@@ -89,11 +93,12 @@ const gameController = (function() {
     if (!gameBoard.checkIfMark(index)) {
       gameBoard.addToBoard(index, mark);
       displayController.addToBoard(index, mark);
+      displayController.showTurn(currentPlayer());
       if (gameBoard.checkIfVictory(mark)) {
-        displayController.won(currentPlayer());
+        displayController.showWon(currentPlayer());
       }
       else if (round == 8) {
-        displayController.draw();
+        displayController.showDraw();
       }
       console.log(gameBoard.getBoard());
       changePlayer();
