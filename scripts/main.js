@@ -25,9 +25,10 @@ const gameBoard = (function() {
       return pattern.every( index => board[index] == mark )
     })
   };
+  const resetBoard = () => board.fill(0);
   const getBoard = () => board;
 
-  return { checkIfMark, addToBoard, checkIfVictory, getBoard }
+  return { checkIfMark, addToBoard, checkIfVictory, resetBoard, getBoard }
 })();
 
 // DISPLAY CONTROLLER MODULE
@@ -37,6 +38,8 @@ const displayController = (function() {
   const playerForm = document.querySelector('form');
   const playerInfo = document.querySelector('.player-info');
   const playerName = document.querySelectorAll('.player-name');
+  const squares = document.querySelectorAll('.square');
+  const inputs = document.querySelectorAll('.player input')
 
   const insertPlayers = () => {
     playerForm.hidden = true;
@@ -48,6 +51,12 @@ const displayController = (function() {
     let square = document.querySelector('#_' + index)
     square.textContent = mark;
   }
+  const resetDisplay = () => {
+    playerForm.hidden = false;
+    playerInfo.hidden = true;
+    squares.forEach(square => square.textContent = '');
+    inputs.forEach(input => input.value = '');
+  }
   const won = (player) => {
     // elaborate
     console.log('you won');
@@ -57,7 +66,7 @@ const displayController = (function() {
     console.log('you draw');
   }
 
-  return { insertPlayers, addToBoard, won, draw }
+  return { insertPlayers, addToBoard, resetDisplay, won, draw }
 })();
 
 // GAME CONTROLLER MODULE
@@ -86,12 +95,20 @@ const gameController = (function() {
       else if (round == 8) {
         displayController.draw();
       }
+      console.log(gameBoard.getBoard());
       changePlayer();
     }
   }
+  const resetGame = () => {
+    console.log('test')
+    round = 0;
+    players.length = 0;
+    displayController.resetDisplay();
+    gameBoard.resetBoard();
+  }
 
   const squares = document.querySelectorAll('.square');
-  squares.forEach( square => {
+  squares.forEach(square => {
     square.addEventListener('click', (e) => {
       let index = e.target.id.split('')[1];
       console.log(`EVENTLISTENER-index: ${index}`);
@@ -99,6 +116,8 @@ const gameController = (function() {
       gameFlow(index, currentPlayer().mark);
     });
   })
+  const reset = document.querySelector('.reset');
+  reset.addEventListener('click', resetGame);
 
   return { insertPlayers, currentPlayer, changePlayer }
 })();
