@@ -57,6 +57,7 @@ const displayController = (function() {
     playerInfo.hidden = true;
     squares.forEach(square => square.textContent = '');
     inputs.forEach(input => input.value = '');
+    info.textContent = 'Insert Player names!';
   }
   const showTurn = (player) => {
     player = player == players[0] ? players [1] : players[0];
@@ -96,6 +97,9 @@ const gameController = (function() {
       displayController.showTurn(currentPlayer());
       if (gameBoard.checkIfVictory(mark)) {
         displayController.showWon(currentPlayer());
+        squares.forEach(square => { 
+          square.removeEventListener('click', clickSquare)
+        });
       }
       else if (round == 8) {
         displayController.showDraw();
@@ -104,23 +108,27 @@ const gameController = (function() {
       changePlayer();
     }
   }
+  const clickSquare = (e) => {
+    let index = e.target.id.split('')[1];
+    console.log(`EVENTLISTENER-index: ${index}`);
+    console.log(`EVENTLISTENER-player: ${currentPlayer().mark}`)
+    gameFlow(index, currentPlayer().mark);
+  }
   const resetGame = () => {
     console.log('test')
     round = 0;
     players.length = 0;
     displayController.resetDisplay();
     gameBoard.resetBoard();
+    squares.forEach(square => { 
+      square.addEventListener('click', clickSquare)
+    });
   }
 
   const squares = document.querySelectorAll('.square');
-  squares.forEach(square => {
-    square.addEventListener('click', (e) => {
-      let index = e.target.id.split('')[1];
-      console.log(`EVENTLISTENER-index: ${index}`);
-      console.log(`EVENTLISTENER-player: ${currentPlayer().mark}`)
-      gameFlow(index, currentPlayer().mark);
-    });
-  })
+  squares.forEach(square => { 
+    square.addEventListener('click', clickSquare)
+  });
   const reset = document.querySelector('.reset');
   reset.addEventListener('click', resetGame);
 
