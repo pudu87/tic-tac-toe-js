@@ -76,7 +76,7 @@ const displayController = (function() {
     Click a square to put an ${player.mark}.`;
   }
   const showWon = (player) => {
-    info.textContent = `Congratulaions ${player.name}, you won!`;
+    info.textContent = `Congratulations ${player.name}, you won!`;
   }
   const showDraw = () => {
     info.textContent = 'Nobody won. Try again';
@@ -96,6 +96,7 @@ const gameController = (function() {
     players.push(createPlayer(input[0].value, input[1].checked, '🞫'));
     players.push(createPlayer(input[2].value, input[3].checked, '🞇'));
     displayController.insertPlayers();
+    players[0].cpu == true ? computerMoves() : 0;
     return false;
   }
   const currentPlayer = () => round % 2 == 0 ? players[0] : players[1];
@@ -116,6 +117,9 @@ const gameController = (function() {
       }
       changePlayer();
     }
+    if (currentPlayer().cpu && !gameBoard.checkIfVictory(mark) && round <= 8) {
+      computerMoves();
+    }
   }
   const clickSquare = (e) => {
     let index = e.target.id.split('')[1];
@@ -129,6 +133,10 @@ const gameController = (function() {
     squares.forEach(square => { 
       square.addEventListener('click', clickSquare)
     });
+  }
+  const computerMoves = () => {
+    index = Math.floor(Math.random() * 9);
+    gameFlow(index, currentPlayer().mark);
   }
 
   const squares = document.querySelectorAll('.square');
