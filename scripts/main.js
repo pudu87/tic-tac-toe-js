@@ -39,7 +39,7 @@ const displayController = (function() {
   const playerForm = document.querySelector('form');
   const playerInfo = document.querySelector('.player-info');
   const playerName = document.querySelectorAll('.player-name');
-  const squares = document.querySelectorAll('.square');
+  const squares = document.querySelectorAll('.square span');
   const inputs = document.querySelectorAll('.player input')
 
   const insertPlayers = () => {
@@ -49,13 +49,20 @@ const displayController = (function() {
     playerName[1].textContent = players[1].name;
   }
   const addToBoard = (index, mark) => {
-    let square = document.querySelector('#_' + index)
+    let square = document.querySelector('#_' + index + ' span')
     square.textContent = mark;
+    console.log(square.textContent)
+    if (square.textContent == '🞇') {
+      square.classList.toggle('alignment');
+    }
   }
   const resetDisplay = () => {
     playerForm.hidden = false;
     playerInfo.hidden = true;
-    squares.forEach(square => square.textContent = '');
+    squares.forEach(square => {
+      square.textContent = ''
+      square.classList.remove('alignment');
+    });
     inputs.forEach(input => input.value = '');
     info.textContent = 'Insert Player names!';
   }
@@ -82,8 +89,8 @@ const gameController = (function() {
 
   const insertPlayers = () => {
     let input = Array.from(document.querySelectorAll('form input'));
-    players.push(createPlayer(input[0].value, 'x'));
-    players.push(createPlayer(input[1].value, 'o'));
+    players.push(createPlayer(input[0].value, '🞫'));
+    players.push(createPlayer(input[1].value, '🞇'));
     displayController.insertPlayers();
     return false;
   }
@@ -104,14 +111,11 @@ const gameController = (function() {
       else if (round == 8) {
         displayController.showDraw();
       }
-      console.log(gameBoard.getBoard());
       changePlayer();
     }
   }
   const clickSquare = (e) => {
     let index = e.target.id.split('')[1];
-    console.log(`EVENTLISTENER-index: ${index}`);
-    console.log(`EVENTLISTENER-player: ${currentPlayer().mark}`)
     gameFlow(index, currentPlayer().mark);
   }
   const resetGame = () => {

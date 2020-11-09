@@ -72,6 +72,18 @@ header .info {
   margin: 5px;
   border: 2px solid #ccc;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.square span {
+  display: block;
+  font-size: 140px;
+}
+
+.alignment {
+  position: relative;
+  bottom: 10px;
 }
 
 /*# sourceMappingURL=main.css.map */
