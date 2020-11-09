@@ -30,11 +30,31 @@ header {
   }
   .player {
     margin-bottom: .5em;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 30px;
     align-items: center;
-    input {
-      width: 200px;
+    input:first-of-type {
+      width: 150px;
+    }
+    label:last-of-type {
+      flex-basis: auto;
+      font-size: 12px;
+      text-align: right;
+    }
+    input:last-of-type {
+      margin-left: auto;
+      flex-basis: 30px;
+    }
+    p:last-of-type {
+      margin-left: 20px;
+    }
+    em {
+      position: relative;
+      left: 5px;
+      bottom: 3px;
+      font-size: 10px;
+      font-variant: small-caps;
+      color: grey;
     }
   }
   #confirm {

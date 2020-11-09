@@ -2,9 +2,9 @@ const players = [];
 
 // PLAYER FACTORY
 
-const createPlayer = (name, mark) => {
+const createPlayer = (name, cpu, mark) => {
 
-  return {name, mark}
+  return {name, cpu, mark}
 }
 
 // GAME BOARD MODULE
@@ -45,8 +45,12 @@ const displayController = (function() {
   const insertPlayers = () => {
     playerForm.hidden = true;
     playerInfo.hidden = false;
-    playerName[0].textContent = players[0].name;
-    playerName[1].textContent = players[1].name;
+    for (let i = 0; i < 2; i++) {
+      playerName[i].textContent = players[i].name;
+      const cpu = document.createElement('em');
+      cpu.textContent = 'CPU';
+      players[i].cpu ? playerName[i].appendChild(cpu) : 0;
+    }
   }
   const addToBoard = (index, mark) => {
     let square = document.querySelector('#_' + index + ' span')
@@ -89,12 +93,11 @@ const gameController = (function() {
 
   const insertPlayers = () => {
     let input = Array.from(document.querySelectorAll('form input'));
-    players.push(createPlayer(input[0].value, '🞫'));
-    players.push(createPlayer(input[1].value, '🞇'));
+    players.push(createPlayer(input[0].value, input[1].checked, '🞫'));
+    players.push(createPlayer(input[2].value, input[3].checked, '🞇'));
     displayController.insertPlayers();
     return false;
   }
-
   const currentPlayer = () => round % 2 == 0 ? players[0] : players[1];
   const changePlayer = () => round ++;
   const gameFlow = (index, mark) => {
@@ -119,7 +122,6 @@ const gameController = (function() {
     gameFlow(index, currentPlayer().mark);
   }
   const resetGame = () => {
-    console.log('test')
     round = 0;
     players.length = 0;
     displayController.resetDisplay();
