@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   background-color: #eee;
@@ -95,15 +96,23 @@ header .info {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.square span {
-  display: block;
   font-size: 140px;
 }
-
-.alignment {
+.square:before {
+  content: "🞫";
+}
+.square:after {
+  content: "🞇";
   position: relative;
   bottom: 10px;
+}
+.square:before, .square:after {
+  display: none;
+}
+
+.display-x:before,
+.display-o:after {
+  display: block;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -4,7 +4,7 @@ const players = [];
 
 const createPlayer = (name, cpu, mark) => {
 
-  return {name, cpu, mark}
+  return { name, cpu, mark }
 }
 
 // GAME BOARD MODULE
@@ -26,9 +26,8 @@ const gameBoard = (function() {
     })
   };
   const resetBoard = () => board.fill(0);
-  const getBoard = () => board;
 
-  return { checkIfMark, addToBoard, checkIfVictory, resetBoard, getBoard }
+  return { checkIfMark, addToBoard, checkIfVictory, resetBoard }
 })();
 
 // DISPLAY CONTROLLER MODULE
@@ -38,34 +37,31 @@ const displayController = (function() {
   const info = document.querySelector('.info');
   const playerForm = document.querySelector('form');
   const playerInfo = document.querySelector('.player-info');
-  const playerName = document.querySelectorAll('.player-name');
-  const squares = document.querySelectorAll('.square span');
-  const inputs = document.querySelectorAll('.player input')
+  const playerNames = document.querySelectorAll('.player-name');
+  const squares = document.querySelectorAll('.square');
+  const inputs = document.querySelectorAll('.player input');
 
   const insertPlayers = () => {
     playerForm.hidden = true;
     playerInfo.hidden = false;
     for (let i = 0; i < 2; i++) {
-      playerName[i].textContent = players[i].name;
-      const cpu = document.createElement('em');
+      playerNames[i].textContent = players[i].name;
+      let cpu = document.createElement('em');
       cpu.textContent = 'CPU';
-      players[i].cpu ? playerName[i].appendChild(cpu) : 0;
+      players[i].cpu ? playerNames[i].appendChild(cpu) : 0;
     }
   }
   const addToBoard = (index, mark) => {
-    let square = document.querySelector('#_' + index + ' span')
-    square.textContent = mark;
-    console.log(square.textContent)
-    if (square.textContent == '🞇') {
-      square.classList.toggle('alignment');
-    }
+    let square = document.querySelector('#_' + index)
+    mark == '🞫'? square.classList.add('display-x') : 
+      square.classList.add('display-o');
   }
   const resetDisplay = () => {
     playerForm.hidden = false;
     playerInfo.hidden = true;
     squares.forEach(square => {
-      square.textContent = ''
-      square.classList.remove('alignment');
+      square.classList.remove('display-x');
+      square.classList.remove('display-o');
     });
     inputs.forEach(input => input.value = '');
     info.textContent = 'Insert Player names!';
@@ -90,61 +86,61 @@ const displayController = (function() {
 const gameController = (function() {
 
   let round = 0;
+  const squares = document.querySelectorAll('.square');
+  const reset = document.querySelector('.reset');
 
   const insertPlayers = () => {
     let input = Array.from(document.querySelectorAll('form input'));
     players.push(createPlayer(input[0].value, input[1].checked, '🞫'));
     players.push(createPlayer(input[2].value, input[3].checked, '🞇'));
     displayController.insertPlayers();
-    players[0].cpu == true ? computerMoves() : 0;
+    players[0].cpu == true ? _computerMoves() : 0;
     return false;
   }
-  const currentPlayer = () => round % 2 == 0 ? players[0] : players[1];
-  const changePlayer = () => round ++;
-  const gameFlow = (index, mark) => {
+  const _currentPlayer = () => round % 2 == 0 ? players[0] : players[1];
+  const _changePlayer = () => round ++;
+  const _gameFlow = (index, mark) => {
     if (!gameBoard.checkIfMark(index)) {
       gameBoard.addToBoard(index, mark);
       displayController.addToBoard(index, mark);
-      displayController.showTurn(currentPlayer());
+      displayController.showTurn(_currentPlayer());
       if (gameBoard.checkIfVictory(mark)) {
-        displayController.showWon(currentPlayer());
+        displayController.showWon(_currentPlayer());
         squares.forEach(square => { 
-          square.removeEventListener('click', clickSquare)
+          square.removeEventListener('click', _clickSquare)
         });
       }
       else if (round == 8) {
         displayController.showDraw();
       }
-      changePlayer();
+      _changePlayer();
     }
-    if (currentPlayer().cpu && !gameBoard.checkIfVictory(mark) && round <= 8) {
-      computerMoves();
+    if (_currentPlayer().cpu && !gameBoard.checkIfVictory(mark) && round <= 8) {
+      _computerMoves();
     }
   }
-  const clickSquare = (e) => {
+  const _clickSquare = (e) => {
     let index = e.target.id.split('')[1];
-    gameFlow(index, currentPlayer().mark);
+    _gameFlow(index, _currentPlayer().mark);
   }
-  const resetGame = () => {
+  const _resetGame = () => {
     round = 0;
     players.length = 0;
     displayController.resetDisplay();
     gameBoard.resetBoard();
     squares.forEach(square => { 
-      square.addEventListener('click', clickSquare)
+      square.addEventListener('click', _clickSquare)
     });
   }
-  const computerMoves = () => {
+  const _computerMoves = () => {
     index = Math.floor(Math.random() * 9);
-    gameFlow(index, currentPlayer().mark);
+    _gameFlow(index, _currentPlayer().mark);
   }
 
-  const squares = document.querySelectorAll('.square');
   squares.forEach(square => { 
-    square.addEventListener('click', clickSquare)
+    square.addEventListener('click', _clickSquare)
   });
-  const reset = document.querySelector('.reset');
-  reset.addEventListener('click', resetGame);
+  reset.addEventListener('click', _resetGame);
 
-  return { insertPlayers, currentPlayer, changePlayer }
+  return { insertPlayers }
 })();

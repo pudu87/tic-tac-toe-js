@@ -93,12 +93,21 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  span {
-    display: block;
-    font-size: 140px;
+  font-size: 140px;
+  &:before {
+    content: '🞫';
+  }
+  &:after {
+    content: '🞇';
+    position: relative;
+    bottom: 10px;
+  }
+  &:before,
+  &:after {
+    display: none;
   }
 }
-.alignment {
-  position: relative;
-  bottom: 10px;
+.display-x:before,
+.display-o:after {
+  display: block;
 }
